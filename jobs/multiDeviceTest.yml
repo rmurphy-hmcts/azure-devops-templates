@@ -153,9 +153,9 @@ jobs:
 
   - ${{ each app in parameters.dependentApps }}:
     - task: AzureCLI@2
-      ${{ if gt(length(format("{0}",app.resourcegroup)), 0) }}:
+      ${{ if gt(length(format('{0}',app.resourcegroup)), 0) }}:
         displayName: Add FW Exception ${{ app.name }}
-      ${{ if ne(true, gt(length(format("{0}",app.resourcegroup)), 0)) }}:
+      ${{ if ne(true, gt(length(format('{0}',app.resourcegroup)), 0)) }}:
         displayName: Add FW Exception ${{ app }}
       inputs:
         azureSubscription: ${{ parameters.subscription }}
@@ -183,10 +183,10 @@ jobs:
             }
           }
       env:
-        ${{ if gt(length(format("{0}",app.resourcegroup)), 0) }}:
+        ${{ if gt(length(format('{0}',app.resourcegroup)), 0) }}:
           dependentResourceGroup: ${{ app.resourceGroup }}
           dependentResourceName: ${{ app.name }}
-        ${{ if ne(true, gt(length(format("{0}",app.resourcegroup)), 0)) }}:
+        ${{ if ne(true, gt(length(format('{0}',app.resourcegroup)), 0)) }}:
           dependentResourceGroup: ${{ app }}
           dependentResourceName: ${{ app }}
         dependentHealthEndpoint: ${{ app.healthEndpoint }}
