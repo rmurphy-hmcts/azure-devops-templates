@@ -18,7 +18,6 @@ steps:
     inputs:
       PathtoPublish: ${{ parameters.path }}/StrykerOutput
       ArtifactName: stryker
-
   - pwsh: |
       $reportfile = Get-Item ${{ parameters.path }}/StrykerOutput/*/reports/mutation-report.json
       Write-Host "##vso[task.uploadfile]$($reportfile.fullname)"
@@ -83,3 +82,8 @@ steps:
 
     displayName: Process Stryker Report
     condition: always()
+
+  - task: PublishMutationReport@0
+    displayName: 'Publish Mutation Test Report'
+    inputs:
+      reportPattern: '**/mutation-report.html'
