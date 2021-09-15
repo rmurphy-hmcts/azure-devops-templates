@@ -97,7 +97,7 @@ jobs:
   steps:
   - checkout: self
 
-  - task: gittools.gitversion.gitversion-task.GitVersion@5
+  - task: gittools.gitversion.gitversion-task.GitVersion@5.6.0
     displayName: GitVersion
 
   - pwsh: |
