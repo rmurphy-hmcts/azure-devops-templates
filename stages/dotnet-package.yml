@@ -104,10 +104,11 @@ stages:
         steps:
         - checkout: self
 
-        - task: gittools.gitversion.gitversion-task.GitVersion@5.6.0
+        - task: gittools.gitversion.gitversion-task.GitVersion@5
           displayName: GitVersion App
           inputs:
             additionalArguments: /updateassemblyinfo ${{ parameters.coreProjectPath }}/AssemblyInfo.cs /ensureassemblyinfo
+            versionSpec: 5.6.0
 
         - template: ../templates/pipelineCaching.yml
           parameters:
@@ -175,10 +176,11 @@ stages:
         steps:
         - checkout: self
 
-        - task: gittools.gitversion.gitversion-task.GitVersion@5.6.0
+        - task: gittools.gitversion.gitversion-task.GitVersion@5
           displayName: GitVersion AcceptanceTests
           inputs:
             additionalArguments: /updateassemblyinfo ${{ parameters.coreProjectPath }}.AcceptanceTests/AssemblyInfo.cs /ensureassemblyinfo
+            versionSpec: 5.6.0
 
         - template: ../templates/pipelineCaching.yml
           parameters:
@@ -241,10 +243,11 @@ stages:
         steps:
         - checkout: self
 
-        - task: gittools.gitversion.gitversion-task.GitVersion@5.6.0
+        - task: gittools.gitversion.gitversion-task.GitVersion@5
           displayName: GitVersion Nuget
           inputs:
             configFilePath: GitVersion.yml
+            versionSpec: 5.6.0
 
         - template: ../templates/pipelineCaching.yml
           parameters:
