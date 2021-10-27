@@ -13,15 +13,18 @@ parameters:
   - name: condition
     type: string
     default: always() 
+  - name: displayName
+    type: string
+
 
 steps:
   - task: AzureCLI@2
     displayName: Add FW Exception ${{ parameters.ruleName }} from ${{ parameters.appName }}
     condition: ${{ parameters.condition }}
     ${{ if gt(length(format('{0}',app.resourcegroup)), 0) }}:
-      displayName: Add FW Exception ${{ app.name }}
+      displayName: ${{ parameters.displayName }}
     ${{ if ne(true, gt(length(format('{0}',app.resourcegroup)), 0)) }}:
-      displayName: Add FW Exception ${{ app }}
+      displayName: ${{ parameters.displayName }}
 
     inputs:
       azureSubscription: ${{ parameters.subscription }}
