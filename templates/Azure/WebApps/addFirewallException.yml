@@ -21,9 +21,7 @@ steps:
   - task: AzureCLI@2
     displayName: Add FW Exception ${{ parameters.ruleName }} from ${{ parameters.appName }}
     condition: ${{ parameters.condition }}
-    displayName: ${{ parameters.displayName }}
-
-
+    #displayName: ${{ parameters.displayName }}
     inputs:
       azureSubscription: ${{ parameters.subscription }}
       scriptType: pscore
