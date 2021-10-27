@@ -21,10 +21,8 @@ steps:
   - task: AzureCLI@2
     displayName: Add FW Exception ${{ parameters.ruleName }} from ${{ parameters.appName }}
     condition: ${{ parameters.condition }}
-    ${{ if gt(length(format('{0}',app.resourcegroup)), 0) }}:
-      displayName: ${{ parameters.displayName }}
-    ${{ if ne(true, gt(length(format('{0}',app.resourcegroup)), 0)) }}:
-      displayName: ${{ parameters.displayName }}
+    displayName: ${{ parameters.displayName }}
+
 
     inputs:
       azureSubscription: ${{ parameters.subscription }}
