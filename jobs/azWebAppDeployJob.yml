@@ -313,48 +313,61 @@ jobs:
                 }
 
           - ${{ each app in parameters.dependentApps }}:
-            - task: AzureCLI@2
-              condition: and(succeeded(), ne(variables['Release.EnvironmentName'], 'Prod')) 
-              ${{ if gt(length(format('{0}',app.resourcegroup)), 0) }}:
-                displayName: Add FW Exception ${{ app.name }}
-              ${{ if ne(true, gt(length(format('{0}',app.resourcegroup)), 0)) }}:
-                displayName: Add FW Exception ${{ app }}
-              inputs:
-                azureSubscription: ${{ parameters.subscription }}
-                scriptType: pscore
-                scriptLocation: inlineScript
-                inlineScript: |
-                  $ErrorActionPreference = "Continue"
-                  while ( !$ip ) { $ip = (Invoke-WebRequest -uri "http://ifconfig.me/ip").Content }
-
-                  az webapp config access-restriction add -g $env:dependentResourceGroup -n $env:dependentResourceName --rule-name $env:BUILD_BUILDID --action Allow --ip-address $ip/32 --priority 200
-
-                  $ready = $false; $retry = 0
-                  while($ready -eq $false -and $retry -lt 10) {
-                    sleep (10 * $retry++)
-
-                    if([string]::IsNullOrWhitespace($env:dependentHealthEndpoint)) {
-                      sleep 60
-                      $ready = $true
-                    } else {
-                      try {
-                        write-host "checking health of $env:dependentHealthEndpoint"
-                        $output = Invoke-RestMethod $env:dependentHealthEndpoint
-                        write-host ($output | convertto-json -depth 3)
-                        $ready = $true
-                      } catch {
-                        $ready = $false
-                      }
-                    }
-                  }
-              env:
+            - template: ../templates/Azure/WebApps/addFirewallException.yml
+              parameters:
+                subscription: ${{ parameters.subscription }}
+                appName: ${{ parameters.appName }}
+                resourceGroupName: ${{ parameters.resourceGroup }}
+                ruleName: $(Build.BuildId)
                 ${{ if gt(length(format('{0}',app.resourcegroup)), 0) }}:
-                  dependentResourceGroup: ${{ app.resourceGroup }}
-                  dependentResourceName: ${{ app.name }}
+                  displayName: Add FW Exception ${{ app.name }}
                 ${{ if ne(true, gt(length(format('{0}',app.resourcegroup)), 0)) }}:
-                  dependentResourceGroup: ${{ app }}
-                  dependentResourceName: ${{ app }}
-                dependentHealthEndpoint: ${{ app.healthEndpoint }}
+                  displayName: Add FW Exception ${{ app }}
+                condition: and(succeeded(), ne(variables['Release.EnvironmentName'], 'Prod')) 
+
+          #- ${{ each app in parameters.dependentApps }}:
+          #  - task: AzureCLI@2
+          #    condition: and(succeeded(), ne(variables['Release.EnvironmentName'], 'Prod')) 
+          #    ${{ if gt(length(format('{0}',app.resourcegroup)), 0) }}:
+          #      displayName: Add FW Exception ${{ app.name }}
+          #    ${{ if ne(true, gt(length(format('{0}',app.resourcegroup)), 0)) }}:
+          #      displayName: Add FW Exception ${{ app }}
+          #    inputs:
+          #      azureSubscription: ${{ parameters.subscription }}
+          #      scriptType: pscore
+          #      scriptLocation: inlineScript
+          #      inlineScript: |
+          #        $ErrorActionPreference = "Continue"
+          #        while ( !$ip ) { $ip = (Invoke-WebRequest -uri "http://ifconfig.me/ip").Content }
+#
+          #        az webapp config access-restriction add -g $env:dependentResourceGroup -n $env:dependentResourceName --rule-name $env:BUILD_BUILDID --action Allow --ip-address $ip/32 --priority 200
+#
+          #        $ready = $false; $retry = 0
+          #        while($ready -eq $false -and $retry -lt 10) {
+          #          sleep (10 * $retry++)
+#
+          #          if([string]::IsNullOrWhitespace($env:dependentHealthEndpoint)) {
+          #            sleep 60
+          #            $ready = $true
+          #          } else {
+          #            try {
+          #              write-host "checking health of $env:dependentHealthEndpoint"
+          #              $output = Invoke-RestMethod $env:dependentHealthEndpoint
+          #              write-host ($output | convertto-json -depth 3)
+          #              $ready = $true
+          #            } catch {
+          #              $ready = $false
+          #            }
+          #          }
+          #        }
+          #    env:
+          #      ${{ if gt(length(format('{0}',app.resourcegroup)), 0) }}:
+          #        dependentResourceGroup: ${{ app.resourceGroup }}
+          #        dependentResourceName: ${{ app.name }}
+          #      ${{ if ne(true, gt(length(format('{0}',app.resourcegroup)), 0)) }}:
+          #        dependentResourceGroup: ${{ app }}
+          #        dependentResourceName: ${{ app }}
+          #      dependentHealthEndpoint: ${{ app.healthEndpoint }}
 
           - task: DotNetCoreCLI@2
             displayName: Verify dotnet version
