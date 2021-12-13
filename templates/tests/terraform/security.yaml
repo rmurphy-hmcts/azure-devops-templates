@@ -10,9 +10,9 @@ steps:
       echo "Make Directory"
       mkdir ${workDir}/TFSecReport
       echo "##### About to start Docker######"
-      docker run --rm -t -v ${tfDir}:/src tfsec/tfsec ./src --format JUnit > ${workDir}/TFSecReport/junit.xml
+      docker run --rm -it -v ${tfDir}:/src tfsec/tfsec ./src --format JUnit > ${workDir}/TFSecReport/junit.xml
       sleep 180
-      docker info
+      docker container ls --all
     displayName: TFSec Static Code Analysis
     continueOnError: true
 
