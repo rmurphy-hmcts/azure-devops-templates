@@ -11,7 +11,7 @@ steps:
       mkdir ${workDir}/TFSecReport
       echo "##### About to start Docker######"
       docker run --rm -t -v ${tfDir}:/src tfsec/tfsec ./src --format JUnit > ${workDir}/TFSecReport/junit.xml
-      sleep 90
+      sleep 180
       docker info
     displayName: TFSec Static Code Analysis
     continueOnError: true
