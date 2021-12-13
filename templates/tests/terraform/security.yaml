@@ -9,7 +9,6 @@ steps:
       tfDir="${{ parameters.terraformPath }}"
       echo "Make Directory"
       mkdir ${workDir}/TFSecReport
-      echo "##### About to start Docker######"
       docker run --rm -t -v ${tfDir}:/src tfsec/tfsec ./src --format JUnit > ${workDir}/TFSecReport/junit.xml
     displayName: TFSec Static Code Analysis
     continueOnError: true
