@@ -134,7 +134,7 @@ steps:
         $azAccount = az account show -s "Reform-CFT-Mgmt" -o json | ConvertFrom-Json
         Write-Host "Azure DNS Sub $($azAccount.name)"
         $token = (az account get-access-token --resource 'https://management.core.windows.net/' --debug | ConvertFrom-Json).accessToken
-        Write-Host "this is our current token $($token)"
+        Write-Host "this is our current token $($azAccount)"
         # Request certificate
         $pArgs = @{
           AZSubscriptionId = $azAccount.id
