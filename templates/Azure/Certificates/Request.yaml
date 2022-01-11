@@ -143,8 +143,13 @@ steps:
         New-PACertificate $domain -Plugin Azure -PluginArgs $pArgs -Verbose
 
         $generatedCert=$(Get-PACertificate)
+        
+        ## Create Full Chain with Private Key
+        $rootPath="C:\Users\patemanc\pateman.workspace\CodeSnippets\snippets\Azure\PowerShell\kv\certs\generated"
+        $fullChainWtihKeyFile="$rootPath/fullchain-withkey.pem"
+        Get-Content $generatedCert.FullChainFile, $generatedCert.KeyFile | Set-Content $fullChainWtihKeyFile
 
-        Write-Host "##vso[task.setvariable variable=pfxPath;isOutput=true]$($generatedCert.PfxFullChain)"
+        Write-Host "##vso[task.setvariable variable=pfxPath;isOutput=true]$fullChainWtihKeyFile"
         Write-Host "##vso[task.setvariable variable=pfxPass;isOutput=true;issecret=true]$pfxPassword"
 
   - task: AzureCLI@2
