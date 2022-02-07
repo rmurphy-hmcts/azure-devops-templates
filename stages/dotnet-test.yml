@@ -76,7 +76,7 @@ parameters:
 
   - name: RunUnitTests
     type: boolean
-    default: true
+    default: false
   - name: RunIntegrationTests
     type: boolean
     default: true
