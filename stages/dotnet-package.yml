@@ -329,13 +329,13 @@ stages:
             publishVstsFeed: ${{ parameters.vstsFeedId }}
             versioningScheme: byBuildNumber
 
-- ${{ if ne(variables['Build.Reason'], 'IndividualCI') }}:
-  - ${{ if eq(parameters.Test, true) }}:
-    - template: ./dotnet-test.yml
-      parameters:
-        packageManagers: ${{ parameters.packageManagers }}
-        nodeVersion:  ${{ parameters.nodeVersion }}
-        ${{ insert }}: ${{ parameters.testParameters }}
+- ${{ if or(ne(variables['Build.Reason'], 'IndividualCI'), if eq(parameters.Test, true)) }}:
+  #- ${{ if eq(parameters.Test, true) }}:
+  - template: ./dotnet-test.yml
+    parameters:
+      packageManagers: ${{ parameters.packageManagers }}
+      nodeVersion:  ${{ parameters.nodeVersion }}
+      ${{ insert }}: ${{ parameters.testParameters }}
 
   # - ${{ if eq(parameters.NodeTest, true) }}:
   #   - template: ./node-test.yml
