@@ -329,8 +329,8 @@ stages:
             publishVstsFeed: ${{ parameters.vstsFeedId }}
             versioningScheme: byBuildNumber
 
-- ${{ if or(ne(variables['Build.Reason'], 'IndividualCI'), eq(parameters.Test, true)) }}:
-  #- ${{ if eq(parameters.Test, true) }}:
+#- ${{ if or(ne(variables['Build.Reason'], 'IndividualCI'), eq(parameters.Test, true)) }}:
+- ${{ if eq(parameters.Test, true) }}:
   - template: ./dotnet-test.yml
     parameters:
       packageManagers: ${{ parameters.packageManagers }}
